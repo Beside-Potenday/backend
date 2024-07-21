@@ -1,20 +1,31 @@
 package alphamail.com.backend.Controller;
 
+import alphamail.com.backend.Model.InputMessageDTO;
+import alphamail.com.backend.Model.OutputMessageDTO;
 import alphamail.com.backend.Service.UniversityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class UnivRestController {
+public class UniversityRestController {
     private final UniversityService universityService;
 
-    public UnivRestController(UniversityService universityService){
+    public UniversityRestController(UniversityService universityService){
         this.universityService = universityService;
     }
 
-    @GetMapping
-    public ResponseEntity<?> test(){
+    @GetMapping("/api/test")
+    public ResponseEntity<?> test() throws Exception{
+        InputMessageDTO inputMessageDTO = new InputMessageDTO("곽두팔",
+                "",
+                "컴퓨터학부",
+                "2020000000",
+                "대화형 프로그래밍 기초",
+                "교수님꼐 성적 정정을 요청하는 메일을 작성해주세요.");
 
+        OutputMessageDTO response = universityService.getResult(inputMessageDTO);
+
+        return ResponseEntity.ok(response);
     }
 }
