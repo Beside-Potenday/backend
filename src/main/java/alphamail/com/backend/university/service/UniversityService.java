@@ -18,10 +18,10 @@ public class UniversityService {
     @Value("${UniversityApiUrl}")
     private String univApiUrl;
 
-    @Value("${UniversityApiGatewayKey}")
+    @Value("${ApiGatewayKey}")
     private String univApiGatewayKey;
 
-    @Value("${clovaStudidApiKey}")
+    @Value("${clovaStudioApiKey}")
     private String clovaStudioApiKey;
 
 
