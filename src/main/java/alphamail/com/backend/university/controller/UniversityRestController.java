@@ -1,8 +1,8 @@
-package alphamail.com.backend.Controller;
+package alphamail.com.backend.university.controller;
 
-import alphamail.com.backend.Model.InputMessageDTO;
-import alphamail.com.backend.Model.OutputMessageDTO;
-import alphamail.com.backend.Service.UniversityService;
+import alphamail.com.backend.university.model.InputMessageDTO;
+import alphamail.com.backend.university.model.OutputMessageDTO;
+import alphamail.com.backend.university.service.UniversityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
