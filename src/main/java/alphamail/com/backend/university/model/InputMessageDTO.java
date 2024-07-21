@@ -1,4 +1,4 @@
-package alphamail.com.backend.Model;
+package alphamail.com.backend.university.model;
 
 public record InputMessageDTO(String sender,
                               String receiver,

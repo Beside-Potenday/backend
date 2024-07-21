@@ -1,7 +1,7 @@
-package alphamail.com.backend.Service;
+package alphamail.com.backend.university.service;
 
-import alphamail.com.backend.Model.InputMessageDTO;
-import alphamail.com.backend.Model.OutputMessageDTO;
+import alphamail.com.backend.university.model.InputMessageDTO;
+import alphamail.com.backend.university.model.OutputMessageDTO;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
