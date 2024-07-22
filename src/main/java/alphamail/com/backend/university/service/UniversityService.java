@@ -19,7 +19,7 @@ public class UniversityService {
     @Value("${UniversityApiUrl}")
     private String univApiUrl;
 
-    @Value("${ApiGatewayKey}")
+    @Value("${ApiGateWayKey}")
     private String univApiGatewayKey;
 
     @Value("${clovaStudioApiKey}")
