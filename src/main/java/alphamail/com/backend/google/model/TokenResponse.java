@@ -1,4 +1,4 @@
-package alphamail.com.backend.common.model;
+package alphamail.com.backend.google.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +8,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TokenResponse {
-
-    private String idToken;
     private String accessToken;
 }
