@@ -58,4 +58,8 @@ public class ConfigUtils {
 //                .replaceAll(",", "%20");
         return scopes.replaceAll(",", "%20");
     }
+
+    public String getTokenUrl() {
+        return getGoogleAuthUrl() + "/token";
+    }
 }
