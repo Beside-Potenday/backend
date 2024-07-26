@@ -12,9 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 @Controller
@@ -58,12 +56,23 @@ public class GoogleController {
             System.out.println(response.getBody());
             GoogleLoginResponse googleLoginResponse = response.getBody();
             String accessToken = googleLoginResponse.getAccessToken();
+            String refreshToken = googleLoginResponse.getRefreshToken();
 
-            return ResponseEntity.ok(new TokenResponse(accessToken));
+            return ResponseEntity.ok(new TokenResponse(accessToken, refreshToken));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return ResponseEntity.badRequest().body(null);
+    }
+
+    @PostMapping("/mail")
+    public ResponseEntity<?> sendGmail(
+            @RequestHeader(value = "accessToken") String accessToken,
+            @RequestHeader(value = "refreshToken") String refreshToken
+    ){
+
+
+        return ResponseEntity.ok(null);
     }
 }
