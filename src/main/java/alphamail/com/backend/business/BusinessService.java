@@ -44,8 +44,19 @@ public class BusinessService {
             HttpMethod.POST, URI.create(businessApiUrl));
         ResponseEntity<ClovaResponse> response = restTemplate.exchange(request,
             ClovaResponse.class);
-        System.out.println(response.getBody().getResult().getMessage().getContent());
-        return new BusinessMailResponse(null, null);
+        String emailContent = response.getBody().getResult().getMessage().getContent();
+        String title = getTitle(emailContent);
+        String mainText = getMainText(emailContent);
+        return new BusinessMailResponse(title, mainText);
+    }
+
+    private String getMainText(String emailContent) {
+        String title = emailContent.split("\n")[0];
+        return emailContent.substring(title.length()+1);
+    }
+
+    private String getTitle(String emailContent) {
+        return emailContent.split("\n")[0].substring(5);
     }
 
     private HttpHeaders setHeaders() {
@@ -58,7 +69,8 @@ public class BusinessService {
 
     private ClovaRequest getBody(BusinessMailRequest businessMailRequest) {
         ClovaTask systemTask = new ClovaTask("system",
-            "이메일을 길게 작성해줘. 형식은 : '제목 : [제목] \n\n [본문 내용]");
+            "이메일을 길게 작성해줘. !(송신자 이름)은 실제 송신자 이름을 채워줬으면 좋겠어.\n"
+                + " 형식은 : '제목 : [(송신자 소속)] (제목)\n(본문 내용)'\n");
         ClovaTask userTask = new ClovaTask("user", makeUserContent(businessMailRequest));
         List<ClovaTask> tasks = new ArrayList<>();
         tasks.add(systemTask);
@@ -70,7 +82,23 @@ public class BusinessService {
     }
 
     private String makeUserContent(BusinessMailRequest businessMailRequest) {
-        String a = "";
-        return a;
+        StringBuilder sb = new StringBuilder();
+        if(!businessMailRequest.sendType().isEmpty()) sb.append("송신 타입 : ")
+            .append(businessMailRequest.sendType()).append("\n");
+        if(!businessMailRequest.businessSender().name().isEmpty()) sb.append("송신자 이름 : ")
+            .append(businessMailRequest.businessSender().name()).append("\n");
+        if(!businessMailRequest.businessSender().level().isEmpty()) sb.append("송신자 직급 : ")
+            .append(businessMailRequest.businessSender().level()).append("\n");
+        if(!businessMailRequest.businessSender().company().isEmpty()) sb.append("송신자 소속 : ")
+            .append(businessMailRequest.businessSender().company()).append("\n");
+        if(!businessMailRequest.businessSender().department().isEmpty()) sb.append("송신자 직급 : ")
+            .append(businessMailRequest.businessSender().department()).append("\n");
+        if(!businessMailRequest.businessReceiver().name().isEmpty()) sb.append("수신자 이름 : ")
+            .append(businessMailRequest.businessReceiver().name()).append("\n");
+        if(!businessMailRequest.businessReceiver().level().isEmpty()) sb.append("수신자 직급 : ")
+            .append(businessMailRequest.businessReceiver().level()).append("\n");
+        if(!businessMailRequest.contents().isEmpty()) sb.append("작성 내용 : ")
+            .append(businessMailRequest.contents()).append("\n");
+        return sb.toString();
     }
 }
