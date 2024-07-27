@@ -15,6 +15,7 @@ public class UniversityRestController {
         this.universityService = universityService;
     }
 
+    @CrossOrigin("https://alpamail-frontend.vercel.app/")
     @PostMapping("/univ")
     public ResponseEntity<?> getUniv(@RequestBody UniversityRequest universityRequest) throws Exception{
         UniversityResponse response = universityService.getResult(universityRequest);
