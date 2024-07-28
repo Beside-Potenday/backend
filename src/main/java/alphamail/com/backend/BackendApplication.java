@@ -19,5 +19,19 @@ public class BackendApplication {
 		SpringApplication.run(BackendApplication.class, args);
 	}
 
+	@Bean
+	public ServletWebServerFactory servletContainer() {
+		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
+		tomcat.addAdditionalTomcatConnectors(httpToHttpsRedirectConnector());
+		return tomcat;
+	}
 
+	private Connector httpToHttpsRedirectConnector() {
+		Connector connector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
+		connector.setScheme("http");
+		connector.setPort(8080);
+		connector.setSecure(false);
+		connector.setRedirectPort(443);
+		return connector;
+	}
 }
