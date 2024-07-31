@@ -94,7 +94,7 @@ public class UniversityService {
         if(!universityRequest.subject().isEmpty()) sb.append("과목명 : " + universityRequest.subject()+"\n");
         if(!universityRequest.content().isEmpty()) sb.append(universityRequest.content()+"\n");
         //title과 content 분리의 편의성 위해 추가
-        sb.append("제목 앞에는 '제목 : '을 붙여 주고, 제목과 내용은 엔터로 구분지어 주세요. 문단 별로 구분지어 작성해 주세요.");
+        sb.append("제목 앞에는 '제목 : '을 붙여 주고, 제목과 내용은 엔터로 구분지어 주세요. 문단 별로 엔터 두 번을 이용하여 구분지어 작성해 주세요.");
 
         //보낼 데이터 정의
         String contentData = sb.toString();
