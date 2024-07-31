@@ -14,7 +14,7 @@ public class UniversityRestController {
     public UniversityRestController(UniversityService universityService){
         this.universityService = universityService;
     }
-    @CrossOrigin(origins = "*")
+
     @PostMapping("/univ")
     public ResponseEntity<?> getUniv(@RequestBody UniversityRequest universityRequest) throws Exception{
         UniversityResponse response = universityService.getResult(universityRequest);
