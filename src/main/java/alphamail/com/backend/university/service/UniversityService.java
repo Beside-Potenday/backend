@@ -1,18 +1,15 @@
 package alphamail.com.backend.university.service;
 
-import alphamail.com.backend.business.model.BusinessMailRequest;
 import alphamail.com.backend.common.model.ClovaRequest;
 import alphamail.com.backend.common.model.ClovaResponse;
 import alphamail.com.backend.common.model.ClovaTask;
 import alphamail.com.backend.university.model.UniversityRequest;
 import alphamail.com.backend.university.model.UniversityResponse;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +55,7 @@ public class UniversityService {
         while(st.hasMoreTokens()) {
             contentBuilder.append(st.nextToken() + "\n");
         }
-        String content = contentBuilder.toString();
+        String content = contentBuilder.toString().replace("\n","<br>");
 
         return new UniversityResponse(title ,content);
     }
