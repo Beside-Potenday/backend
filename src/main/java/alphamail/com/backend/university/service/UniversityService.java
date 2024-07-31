@@ -55,7 +55,7 @@ public class UniversityService {
         while(st.hasMoreTokens()) {
             contentBuilder.append(st.nextToken() + "\n");
         }
-        String content = contentBuilder.toString().replace("\n","<br>");
+        String content = contentBuilder.toString();
 
         return new UniversityResponse(title ,content);
     }
