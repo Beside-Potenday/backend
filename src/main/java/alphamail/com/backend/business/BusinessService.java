@@ -91,8 +91,6 @@ public class BusinessService {
             .append(businessMailRequest.businessSender().level()).append("\n");
         if(!businessMailRequest.businessSender().company().isEmpty()) sb.append("송신자 소속 : ")
             .append(businessMailRequest.businessSender().company()).append("\n");
-        if(!businessMailRequest.businessSender().department().isEmpty()) sb.append("송신자 직급 : ")
-            .append(businessMailRequest.businessSender().department()).append("\n");
         if(!businessMailRequest.businessReceiver().name().isEmpty()) sb.append("수신자 이름 : ")
             .append(businessMailRequest.businessReceiver().name()).append("\n");
         if(!businessMailRequest.businessReceiver().level().isEmpty()) sb.append("수신자 직급 : ")
