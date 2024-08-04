@@ -97,8 +97,8 @@ public class BusinessService {
             .append(businessMailRequest.businessReceiver().name()).append("\n");
         if(!businessMailRequest.businessReceiver().level().isEmpty()) sb.append("수신자 직급 : ")
             .append(businessMailRequest.businessReceiver().level()).append("\n");
-        if(!businessMailRequest.contents().isEmpty()) sb.append("작성 내용 : ")
-            .append(businessMailRequest.contents()).append("\n");
+        if(!businessMailRequest.content().isEmpty()) sb.append("작성 내용 : ")
+            .append(businessMailRequest.content()).append("\n");
         return sb.toString();
     }
 }
