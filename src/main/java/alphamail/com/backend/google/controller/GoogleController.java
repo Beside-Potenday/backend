@@ -34,7 +34,7 @@ public class GoogleController {
     }
 
     @GetMapping(value = "/login/redirect")
-    public ResponseEntity<TokenResponse> redirectGoogleLogin(
+    public ResponseEntity<?> redirectGoogleLogin(
         @RequestParam(value = "code") String authCode
     ) {
         // HTTP 통신을 위해 RestTemplate 활용
@@ -49,30 +49,21 @@ public class GoogleController {
         try {
             // Http Header 설정
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+
+
             RequestEntity<GoogleLoginRequest> request = new RequestEntity<>(body, headers, HttpMethod.POST, URI.create(
                 configUtils.getTokenUrl()));
+
             ResponseEntity<GoogleLoginResponse> response = restTemplate.exchange(request, GoogleLoginResponse.class);
-            System.out.println(response.getBody());
+
             GoogleLoginResponse googleLoginResponse = response.getBody();
             String accessToken = googleLoginResponse.getAccessToken();
-            String refreshToken = googleLoginResponse.getRefreshToken();
 
-            return ResponseEntity.ok(new TokenResponse(accessToken, refreshToken));
+            return ResponseEntity.ok(new TokenResponse(accessToken));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return ResponseEntity.badRequest().body(null);
-    }
-
-    @PostMapping("/mail")
-    public ResponseEntity<?> sendGmail(
-            @RequestHeader(value = "accessToken") String accessToken,
-            @RequestHeader(value = "refreshToken") String refreshToken
-    ){
-
-
-        return ResponseEntity.ok(null);
     }
 }
