@@ -69,8 +69,8 @@ public class BusinessService {
 
     private ClovaRequest getBody(BusinessMailRequest businessMailRequest) {
         ClovaTask systemTask = new ClovaTask("system",
-            "이메일을 길게 작성해줘. !(송신자 이름)은 실제 송신자 이름을 채워줬으면 좋겠어.\n"
-                + " 형식은 : '제목 : [(송신자 소속)] (제목)\n(본문 내용)'\n");
+            "이메일을 길게 작성해줘. !(발신자 이름)은 실제 발신자 이름을 채워줬으면 좋겠어.\n"
+                + " 형식은 : '제목 : [(발신자 소속)] (제목)\n(본문 내용)'\n");
         ClovaTask userTask = new ClovaTask("user", makeUserContent(businessMailRequest));
         List<ClovaTask> tasks = new ArrayList<>();
         tasks.add(systemTask);
@@ -83,10 +83,10 @@ public class BusinessService {
 
     private String makeUserContent(BusinessMailRequest businessMailRequest) {
         StringBuilder sb = new StringBuilder();
-        if(!businessMailRequest.sender().isEmpty()) sb.append("송신자 : " + businessMailRequest.sender()+"\n");
+        if(!businessMailRequest.sender().isEmpty()) sb.append("발신자 : " + businessMailRequest.sender()+"\n");
         if(!businessMailRequest.receiver().isEmpty()) sb.append("수신자 : " + businessMailRequest.receiver()+"\n");
-        if(!businessMailRequest.company().isEmpty()) sb.append("송신자 회사 : " + businessMailRequest.company()+"\n");
-        if(!businessMailRequest.department().isEmpty()) sb.append("송신자 부서 : " + businessMailRequest.department()+"\n");
+        if(!businessMailRequest.company().isEmpty()) sb.append("발신자 회사 : " + businessMailRequest.company()+"\n");
+        if(!businessMailRequest.department().isEmpty()) sb.append("발신자 부서 : " + businessMailRequest.department()+"\n");
         if(!businessMailRequest.additional().isEmpty()) sb.append("추가 기재 사항 : " + businessMailRequest.additional()+"\n");
         if(!businessMailRequest.content().isEmpty()) sb.append("메일 작성 목적 : " + businessMailRequest.content()+"\n");
         return sb.toString();
