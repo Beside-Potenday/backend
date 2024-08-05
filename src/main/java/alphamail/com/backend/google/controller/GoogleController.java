@@ -43,7 +43,7 @@ public class GoogleController {
             .clientSecret(configUtils.getGoogleSecret())
             .code(authCode)
             .redirectUri(configUtils.getGoogleRedirectUri())
-            .grantType("authorization_code")
+            .grantType("authorization_code").accessType("offline").prompt("consent")
             .build();
 
         try {
@@ -59,7 +59,7 @@ public class GoogleController {
             GoogleLoginResponse googleLoginResponse = response.getBody();
             String accessToken = googleLoginResponse.getAccessToken();
 
-            return ResponseEntity.ok(new TokenResponse(accessToken));
+            return ResponseEntity.ok(googleLoginResponse);
         } catch (Exception e) {
             e.printStackTrace();
         }
