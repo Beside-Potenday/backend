@@ -83,20 +83,12 @@ public class BusinessService {
 
     private String makeUserContent(BusinessMailRequest businessMailRequest) {
         StringBuilder sb = new StringBuilder();
-        if(!businessMailRequest.sendType().isEmpty()) sb.append("송신 타입 : ")
-            .append(businessMailRequest.sendType()).append("\n");
-        if(!businessMailRequest.businessSender().name().isEmpty()) sb.append("송신자 이름 : ")
-            .append(businessMailRequest.businessSender().name()).append("\n");
-        if(!businessMailRequest.businessSender().level().isEmpty()) sb.append("송신자 직급 : ")
-            .append(businessMailRequest.businessSender().level()).append("\n");
-        if(!businessMailRequest.businessSender().company().isEmpty()) sb.append("송신자 소속 : ")
-            .append(businessMailRequest.businessSender().company()).append("\n");
-        if(!businessMailRequest.businessReceiver().name().isEmpty()) sb.append("수신자 이름 : ")
-            .append(businessMailRequest.businessReceiver().name()).append("\n");
-        if(!businessMailRequest.businessReceiver().level().isEmpty()) sb.append("수신자 직급 : ")
-            .append(businessMailRequest.businessReceiver().level()).append("\n");
-        if(!businessMailRequest.content().isEmpty()) sb.append("작성 내용 : ")
-            .append(businessMailRequest.content()).append("\n");
+        if(!businessMailRequest.sender().isEmpty()) sb.append("송신자 : " + businessMailRequest.sender()+"\n");
+        if(!businessMailRequest.receiver().isEmpty()) sb.append("수신자 : " + businessMailRequest.receiver()+"\n");
+        if(!businessMailRequest.company().isEmpty()) sb.append("송신자 회사 : " + businessMailRequest.company()+"\n");
+        if(!businessMailRequest.department().isEmpty()) sb.append("송신자 부서 : " + businessMailRequest.department()+"\n");
+        if(!businessMailRequest.additional().isEmpty()) sb.append("추가 기재 사항 : " + businessMailRequest.additional()+"\n");
+        if(!businessMailRequest.content().isEmpty()) sb.append("메일 작성 목적 : " + businessMailRequest.content()+"\n");
         return sb.toString();
     }
 }

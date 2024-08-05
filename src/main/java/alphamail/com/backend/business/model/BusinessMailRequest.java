@@ -1,5 +1,11 @@
 package alphamail.com.backend.business.model;
 
-public record BusinessMailRequest(String sendType, BusinessSender businessSender, BusinessReceiver businessReceiver, String content) {
+public record BusinessMailRequest(String content,
+                                  String sender,
+                                  String company,
+                                  String department,
+                                  String additional,
+                                  String receiver
+                                  ) {
 
 }
