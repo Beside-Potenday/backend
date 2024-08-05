@@ -13,7 +13,6 @@ public class TokenEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @Column(name = "member_id", nullable = false)
     private MemberEntity memberEntity;
 
     @Column(name = "refresh_token", nullable = false)
