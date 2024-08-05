@@ -34,6 +34,9 @@ dependencies {
 	implementation group: 'com.google.apis', name: 'google-api-services-gmail', version: 'v1-rev110-1.25.0'
 	implementation 'com.google.oauth-client:google-oauth-client-jetty:1.31.5'
 	implementation 'com.google.apis:google-api-services-gmail:v1-rev110-1.25.0'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.h2database:h2'
 }
 
 tasks.named('test') {
