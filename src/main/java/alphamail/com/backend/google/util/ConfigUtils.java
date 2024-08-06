@@ -34,6 +34,9 @@ public class ConfigUtils {
     @Value("${google.auth.scope}")
     private String scopes;
 
+    @Getter
+    @Value("${google.auth.user-info}")
+    private String userInfoUrl;
     // Google 로그인 URL 생성 로직
     public String googleInitUrl() {
         Map<String, Object> params = new HashMap<>();
@@ -41,6 +44,8 @@ public class ConfigUtils {
         params.put("redirect_uri", getGoogleRedirectUri());
         params.put("response_type", "code");
         params.put("scope", getScopeUrl());
+        params.put("access_type", "offline");
+        params.put("prompt", "consent");
 
         String paramStr = params.entrySet().stream()
                 .map(param -> param.getKey() + "=" + param.getValue())
@@ -54,12 +59,11 @@ public class ConfigUtils {
 
     // scope의 값을 보내기 위해 띄어쓰기 값을 UTF-8로 변환하는 로직 포함
     public String getScopeUrl() {
-//        return scopes.stream().collect(Collectors.joining(","))
-//                .replaceAll(",", "%20");
         return scopes.replaceAll(",", "%20");
     }
 
     public String getTokenUrl() {
         return getGoogleAuthUrl() + "/token";
     }
+
 }
