@@ -11,4 +11,7 @@ import lombok.Setter;
 @Builder
 public class TokenResponse {
     private String accessToken;
+    private String name;
+    private String picture;
+    private String email;
 }

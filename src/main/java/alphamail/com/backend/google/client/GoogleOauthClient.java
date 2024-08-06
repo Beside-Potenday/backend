@@ -2,6 +2,7 @@ package alphamail.com.backend.google.client;
 
 import alphamail.com.backend.google.model.GoogleLoginRequest;
 import alphamail.com.backend.google.model.GoogleLoginResponse;
+import alphamail.com.backend.google.model.GoogleUserInfoResponse;
 import alphamail.com.backend.google.util.ConfigUtils;
 import java.net.URI;
 import org.springframework.http.HttpHeaders;
@@ -34,13 +35,13 @@ public class GoogleOauthClient {
         return response.getBody();
     }
 
-    public void getUserInfo(String accessToken) {
+    public GoogleUserInfoResponse getUserInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         System.out.println(accessToken);
         headers.setBearerAuth(accessToken);
         RequestEntity<String> request = new RequestEntity<>(headers, HttpMethod.GET, URI.create(configUtils.getUserInfoUrl()));
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-        System.out.println(response);
+        ResponseEntity<GoogleUserInfoResponse> response = restTemplate.exchange(request, GoogleUserInfoResponse.class);
+        return response.getBody();
     }
 
     private GoogleLoginRequest getGoogleLoginRequest(String authCode) {

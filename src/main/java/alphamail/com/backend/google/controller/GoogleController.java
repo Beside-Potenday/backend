@@ -2,6 +2,7 @@ package alphamail.com.backend.google.controller;
 
 import alphamail.com.backend.google.client.GoogleOauthClient;
 import alphamail.com.backend.google.model.GoogleLoginResponse;
+import alphamail.com.backend.google.model.GoogleUserInfoResponse;
 import alphamail.com.backend.google.model.TokenResponse;
 import java.net.URI;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,12 @@ public class GoogleController {
         GoogleLoginResponse googleLoginResponse = googleOauthClient.getGoogleLoginResponse(
             authCode);
         String accessToken = googleLoginResponse.getAccessToken();
-        googleOauthClient.getUserInfo(accessToken);
-        return ResponseEntity.ok(TokenResponse.builder().accessToken(accessToken).build());
+        GoogleUserInfoResponse googleUserInfoResponse = googleOauthClient.getUserInfo(accessToken);
+        return ResponseEntity.ok(TokenResponse.builder()
+            .accessToken(accessToken)
+            .email(googleUserInfoResponse.email())
+            .name(googleUserInfoResponse.name())
+            .picture(googleUserInfoResponse.picture())
+            .build());
     }
 }

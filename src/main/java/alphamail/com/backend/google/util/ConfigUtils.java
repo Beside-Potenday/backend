@@ -45,7 +45,6 @@ public class ConfigUtils {
         params.put("response_type", "code");
         params.put("scope", getScopeUrl());
         params.put("access_type", "offline");
-        params.put("prompt", "consent");
 
         String paramStr = params.entrySet().stream()
                 .map(param -> param.getKey() + "=" + param.getValue())
