@@ -56,7 +56,7 @@ public class MailService {
     @Transactional
     public Page<MailResponse> getEmails(String accessToken, Pageable pageable) {
         MemberEntity member = tokenRepository.findByAccessToken(accessToken).getMemberEntity();
-        return mailRepository.findAllByMember(member).map(MailResponse::from);
+        return mailRepository.findAllByMemberEntityId(member.getId(), pageable).map(MailResponse::from);
     }
 
     private Gmail getGmailService(String accessToken) throws GeneralSecurityException, IOException {
