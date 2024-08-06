@@ -3,14 +3,21 @@ package alphamail.com.backend.mail.model;
 import alphamail.com.backend.user.entity.MemberEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
+import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
+@Getter
 public class MailEntity {
 
     @Id
@@ -26,6 +33,9 @@ public class MailEntity {
 
     @Column(name = "body", nullable = false)
     private String body;
+
+    @CreatedDate
+    private LocalDateTime createdDate;
 
     protected MailEntity() {
 

@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Base64;
 import java.util.Properties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +51,12 @@ public class MailService {
         MemberEntity member = tokenRepository.findByAccessToken(accessToken).getMemberEntity();
         MailEntity mail = new MailEntity(member, emailToSave.subject(), emailToSave.body());
         mailRepository.save(mail);
+    }
+
+    @Transactional
+    public Page<MailResponse> getEmails(String accessToken, Pageable pageable) {
+        MemberEntity member = tokenRepository.findByAccessToken(accessToken).getMemberEntity();
+        return mailRepository.findAllByMember(member).map(MailResponse::from);
     }
 
     private Gmail getGmailService(String accessToken) throws GeneralSecurityException, IOException {
