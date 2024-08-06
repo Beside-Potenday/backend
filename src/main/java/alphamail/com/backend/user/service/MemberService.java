@@ -9,6 +9,8 @@ import alphamail.com.backend.user.repository.TokenRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 public class MemberService {
 
@@ -28,8 +30,20 @@ public class MemberService {
             memberRepository.save(member);
         }
         MemberEntity member = memberRepository.findByEmail(googleUserInfoResponse.email());
-        TokenEntity token = new TokenEntity(member, googleLoginResponse.getRefreshToken(),
-            googleLoginResponse.getAccessToken(), googleLoginResponse.getExpiresIn());
+
+        TokenEntity token = null;
+
+        if(googleLoginResponse.getRefreshToken() != null){
+            token = new TokenEntity(member, googleLoginResponse.getRefreshToken(),
+                    googleLoginResponse.getAccessToken(), googleLoginResponse.getExpiresIn());
+        }
+
+        if(googleLoginResponse.getRefreshToken() == null){
+            token = tokenRepository.findByMemberEntity(member);
+            token.setAccessToken(googleLoginResponse.getAccessToken());
+            token.setExpiresIn(LocalDateTime.now().plusSeconds(googleLoginResponse.getExpiresIn()));
+        }
+
         tokenRepository.save(token);
     }
 }
