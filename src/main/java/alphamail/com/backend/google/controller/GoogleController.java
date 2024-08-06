@@ -1,69 +1,50 @@
 package alphamail.com.backend.google.controller;
 
-import alphamail.com.backend.google.model.TokenResponse;
-import alphamail.com.backend.google.model.GoogleLoginRequest;
+import alphamail.com.backend.google.client.GoogleOauthClient;
 import alphamail.com.backend.google.model.GoogleLoginResponse;
-import alphamail.com.backend.google.util.ConfigUtils;
+import alphamail.com.backend.google.model.GoogleUserInfoResponse;
+import alphamail.com.backend.google.model.TokenResponse;
+import alphamail.com.backend.user.service.MemberService;
 import java.net.URI;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping(value = "/google")
 public class GoogleController {
 
-    private final ConfigUtils configUtils;
-    private final RestTemplate restTemplate;
+    private final GoogleOauthClient googleOauthClient;
+    private final MemberService memberService;
 
-    GoogleController(ConfigUtils configUtils, RestTemplate restTemplate) {
-        this.configUtils = configUtils;
-        this.restTemplate = restTemplate;
+    public GoogleController(GoogleOauthClient googleOauthClient, MemberService memberService) {
+        this.googleOauthClient = googleOauthClient;
+        this.memberService = memberService;
     }
 
     @GetMapping(value = "/login")
     public ResponseEntity<Object> moveGoogleInitUrl() {
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
-            .location(URI.create(configUtils.googleInitUrl())).build();
+            .location(URI.create(googleOauthClient.googleInitUrl())).build();
     }
 
     @GetMapping(value = "/login/redirect")
-    public ResponseEntity<?> redirectGoogleLogin(
+    public ResponseEntity<TokenResponse> redirectGoogleLogin(
         @RequestParam(value = "code") String authCode
     ) {
-        // HTTP 통신을 위해 RestTemplate 활용
-        GoogleLoginRequest body = GoogleLoginRequest.builder()
-            .clientId(configUtils.getGoogleClientId())
-            .clientSecret(configUtils.getGoogleSecret())
-            .code(authCode)
-            .redirectUri(configUtils.getGoogleRedirectUri())
-            .grantType("authorization_code").accessType("offline").prompt("consent")
-            .build();
-
-        try {
-            // Http Header 설정
-            HttpHeaders headers = new HttpHeaders();
-
-
-            RequestEntity<GoogleLoginRequest> request = new RequestEntity<>(body, headers, HttpMethod.POST, URI.create(
-                configUtils.getTokenUrl()));
-
-            ResponseEntity<GoogleLoginResponse> response = restTemplate.exchange(request, GoogleLoginResponse.class);
-
-            GoogleLoginResponse googleLoginResponse = response.getBody();
-            String accessToken = googleLoginResponse.getAccessToken();
-
-            return ResponseEntity.ok(googleLoginResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return ResponseEntity.badRequest().body(null);
+        GoogleLoginResponse googleLoginResponse = googleOauthClient.getGoogleLoginResponse(
+            authCode);
+        String accessToken = googleLoginResponse.getAccessToken();
+        GoogleUserInfoResponse googleUserInfoResponse = googleOauthClient.getUserInfo(accessToken);
+        memberService.createMember(googleLoginResponse, googleUserInfoResponse);
+        return ResponseEntity.ok(TokenResponse.builder()
+            .accessToken(accessToken)
+            .email(googleUserInfoResponse.email())
+            .name(googleUserInfoResponse.name())
+            .picture(googleUserInfoResponse.picture())
+            .build());
     }
 }

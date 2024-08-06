@@ -1,6 +1,7 @@
 package alphamail.com.backend.user.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,14 +19,19 @@ public class TokenEntity {
     @Column(name = "refresh_token", nullable = false)
     private String refreshToken;
 
-    @Column(name = "id_token", nullable = false)
-    private String idToken;
+    @Column(name = "access_token", nullable = false)
+    private String accessToken;
+
+    @Column(name = "expires_in", nullable = false)
+    private LocalDateTime expiresIn;
 
     public TokenEntity() {}
 
-    public TokenEntity(MemberEntity memberEntity, String refreshToken, String idToken){
+    public TokenEntity(MemberEntity memberEntity, String refreshToken, String accessToken,
+        Integer expiresIn) {
         this.memberEntity = memberEntity;
         this.refreshToken = refreshToken;
-        this.idToken = idToken;
+        this.accessToken = accessToken;
+        this.expiresIn = LocalDateTime.now().plusSeconds(expiresIn);
     }
 }

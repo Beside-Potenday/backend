@@ -1,6 +1,9 @@
 package alphamail.com.backend.mail;
 
 import alphamail.com.backend.google.util.ConfigUtils;
+import alphamail.com.backend.mail.model.MailEntity;
+import alphamail.com.backend.user.entity.MemberEntity;
+import alphamail.com.backend.user.repository.TokenRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -16,19 +19,47 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Base64;
 import java.util.Properties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MailService {
 
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private final ConfigUtils configUtils;
+    private final TokenRepository tokenRepository;
+    private final MailRepository mailRepository;
 
-    public MailService(ConfigUtils configUtils) {
+    public MailService(ConfigUtils configUtils, TokenRepository tokenRepository,
+        MailRepository mailRepository) {
         this.configUtils = configUtils;
+        this.tokenRepository = tokenRepository;
+        this.mailRepository = mailRepository;
     }
 
-    public Gmail getGmailService(String accessToken) throws GeneralSecurityException, IOException {
+    public void sendEmail(String accessToken, MailRequest.Send emailToSend)
+        throws MessagingException, IOException, GeneralSecurityException {
+        MimeMessage email = createEmail(emailToSend.to(), emailToSend.from(), emailToSend.subject(),
+            emailToSend.body());
+        sendMessage(getGmailService(accessToken), "me", email);
+    }
+
+    @Transactional
+    public void saveEmail(String accessToken, MailRequest.Save emailToSave) {
+        MemberEntity member = tokenRepository.findByAccessToken(accessToken).getMemberEntity();
+        MailEntity mail = new MailEntity(member, emailToSave.subject(), emailToSave.body());
+        mailRepository.save(mail);
+    }
+
+    @Transactional
+    public Page<MailResponse> getEmails(String accessToken, Pageable pageable) {
+        MemberEntity member = tokenRepository.findByAccessToken(accessToken).getMemberEntity();
+        return mailRepository.findAllByMemberEntityId(member.getId(), pageable).map(MailResponse::from);
+    }
+
+    private Gmail getGmailService(String accessToken) throws GeneralSecurityException, IOException {
         GoogleCredential credential = new GoogleCredential.Builder()
             .setClientSecrets(configUtils.getGoogleClientId(), configUtils.getGoogleSecret())
             .setJsonFactory(JSON_FACTORY)
@@ -36,17 +67,14 @@ public class MailService {
             .build()
             .setAccessToken(accessToken);
 
-        return new Gmail.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, credential)
+        return new Gmail.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY,
+            credential)
             .setApplicationName("YOUR_APPLICATION_NAME")
             .build();
     }
 
-    public void sendEmail(String accessToken, String to, String from, String subject, String bodyText) throws MessagingException, IOException, GeneralSecurityException {
-        MimeMessage email = createEmail(to, from, subject, bodyText);
-        sendMessage(getGmailService(accessToken), "me", email);
-    }
-
-    public MimeMessage createEmail(String to, String from, String subject, String bodyText) throws MessagingException {
+    private MimeMessage createEmail(String to, String from, String subject, String bodyText)
+        throws MessagingException {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
         MimeMessage email = new MimeMessage(session);
@@ -58,7 +86,8 @@ public class MailService {
         return email;
     }
 
-    public void sendMessage(Gmail service, String userId, MimeMessage email) throws MessagingException, IOException {
+    private void sendMessage(Gmail service, String userId, MimeMessage email)
+        throws MessagingException, IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         email.writeTo(baos);
         String encodedEmail = Base64.getUrlEncoder().encodeToString(baos.toByteArray());
