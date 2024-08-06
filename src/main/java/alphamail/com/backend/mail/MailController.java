@@ -2,6 +2,7 @@ package alphamail.com.backend.mail;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -15,14 +16,22 @@ public class MailController {
 
     @PostMapping("/send-email")
     public String sendEmail(@RequestHeader("Authorization") String authorizationHeader,
-        @RequestBody MailRequest emailRequest) {
+        @RequestBody MailRequest.Send emailToSend) {
         try {
             String accessToken = authorizationHeader.split(" ")[1];
-            mailService.sendEmail(accessToken, emailRequest.getTo(), emailRequest.getFrom(), emailRequest.getSubject(), emailRequest.getBody());
+            mailService.sendEmail(accessToken, emailToSend);
             return "Email sent successfully!";
         } catch (Exception e) {
             e.printStackTrace();
             return "Failed to send email.";
         }
+    }
+
+    @PostMapping("/save-email")
+    public ResponseEntity<Void> saveEmail(@RequestHeader("Authorization") String authorizationHeader,
+        @RequestBody MailRequest.Save emailToSave) {
+        String accessToken = authorizationHeader.split(" ")[1];
+        mailService.saveEmail(accessToken, emailToSave);
+        return ResponseEntity.ok().build();
     }
 }
