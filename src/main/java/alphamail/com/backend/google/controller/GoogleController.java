@@ -4,6 +4,7 @@ import alphamail.com.backend.google.client.GoogleOauthClient;
 import alphamail.com.backend.google.model.GoogleLoginResponse;
 import alphamail.com.backend.google.model.GoogleUserInfoResponse;
 import alphamail.com.backend.google.model.TokenResponse;
+import alphamail.com.backend.user.service.MemberService;
 import java.net.URI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class GoogleController {
 
     private final GoogleOauthClient googleOauthClient;
+    private final MemberService memberService;
 
-    public GoogleController(GoogleOauthClient googleOauthClient) {
+    public GoogleController(GoogleOauthClient googleOauthClient, MemberService memberService) {
         this.googleOauthClient = googleOauthClient;
+        this.memberService = memberService;
     }
 
     @GetMapping(value = "/login")
@@ -36,6 +39,7 @@ public class GoogleController {
             authCode);
         String accessToken = googleLoginResponse.getAccessToken();
         GoogleUserInfoResponse googleUserInfoResponse = googleOauthClient.getUserInfo(accessToken);
+        memberService.createMember(googleLoginResponse, googleUserInfoResponse);
         return ResponseEntity.ok(TokenResponse.builder()
             .accessToken(accessToken)
             .email(googleUserInfoResponse.email())
