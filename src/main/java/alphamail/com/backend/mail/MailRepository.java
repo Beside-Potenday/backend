@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MailRepository extends JpaRepository<MailEntity, Long> {
 
-    Page<MailEntity> findAllByMemberEntityId(Long id, Pageable pageable);
+    Page<MailEntity> findAllByMemberEntityIdAndType(Long id, String type, Pageable pageable);
 }

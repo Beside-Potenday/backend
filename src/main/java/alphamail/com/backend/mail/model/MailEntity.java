@@ -28,6 +28,9 @@ public class MailEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
+    @Column(name = "type")
+    private String type;
+
     @Column(name = "subject", nullable = false)
     private String subject;
 
@@ -41,8 +44,9 @@ public class MailEntity {
 
     }
 
-    public MailEntity(MemberEntity memberEntity, String subject, String body) {
+    public MailEntity(MemberEntity memberEntity, String type, String subject, String body) {
         this.memberEntity = memberEntity;
+        this.type = type;
         this.subject = subject;
         this.body = body;
     }

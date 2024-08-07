@@ -43,10 +43,10 @@ public class MailController {
     }
 
     @GetMapping("/emails")
-    public ResponseEntity<Page<MailResponse>> getEmails(@RequestHeader("Authorization") String authorizationHeader,
+    public ResponseEntity<Page<MailResponse>> getEmails(@RequestHeader("Authorization") String authorizationHeader,@RequestHeader("type") String type,
         @PageableDefault(page = 0, size = 10, sort = "createdDate", direction = Direction.DESC)
         Pageable pageable) {
         String accessToken = authorizationHeader.split(" ")[1];
-        return ResponseEntity.ok(mailService.getEmails(accessToken, pageable));
+        return ResponseEntity.ok(mailService.getEmails(accessToken, type, pageable));
     }
 }

@@ -49,14 +49,14 @@ public class MailService {
     @Transactional
     public void saveEmail(String accessToken, MailRequest.Save emailToSave) {
         MemberEntity member = tokenRepository.findByAccessToken(accessToken).getMemberEntity();
-        MailEntity mail = new MailEntity(member, emailToSave.subject(), emailToSave.body());
+        MailEntity mail = new MailEntity(member, emailToSave.type(), emailToSave.subject(), emailToSave.body());
         mailRepository.save(mail);
     }
 
     @Transactional
-    public Page<MailResponse> getEmails(String accessToken, Pageable pageable) {
+    public Page<MailResponse> getEmails(String accessToken, String type, Pageable pageable) {
         MemberEntity member = tokenRepository.findByAccessToken(accessToken).getMemberEntity();
-        return mailRepository.findAllByMemberEntityId(member.getId(), pageable).map(MailResponse::from);
+        return mailRepository.findAllByMemberEntityIdAndType(member.getId(), type, pageable).map(MailResponse::from);
     }
 
     private Gmail getGmailService(String accessToken) throws GeneralSecurityException, IOException {
