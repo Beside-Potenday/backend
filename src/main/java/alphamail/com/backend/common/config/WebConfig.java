@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("https://alphamails.vercel.app/", "https://alpamail-frontend-git-seungbeom-seung365s-projects.vercel.app/")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowedHeaders("Authorization", "Content-Type","job")
+                .allowedHeaders("Authorization", "Content-Type","Job")
                 //.exposedHeaders("Custom-Header")
                 .allowCredentials(true)
                 .maxAge(3600);
