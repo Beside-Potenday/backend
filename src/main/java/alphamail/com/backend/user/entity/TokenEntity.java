@@ -16,10 +16,10 @@ public class TokenEntity {
     @OneToOne(fetch = FetchType.LAZY)
     private MemberEntity memberEntity;
 
-    @Column(name = "refresh_token", nullable = false)
+    @Column(name = "refresh_token", nullable = false, length = 400)
     private String refreshToken;
 
-    @Column(name = "access_token", nullable = false)
+    @Column(name = "access_token", nullable = false, length = 400)
     private String accessToken;
 
     @Column(name = "expires_in", nullable = false)

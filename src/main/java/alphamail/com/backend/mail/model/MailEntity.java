@@ -34,7 +34,7 @@ public class MailEntity {
     @Column(name = "subject", nullable = false)
     private String subject;
 
-    @Column(name = "body", nullable = false)
+    @Column(name = "body", nullable = false, length = 2000)
     private String body;
 
     @CreatedDate
