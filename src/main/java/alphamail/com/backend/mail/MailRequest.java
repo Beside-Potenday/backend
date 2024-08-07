@@ -9,7 +9,7 @@ public class MailRequest {
                        ) {
     }
 
-    public record Save(String type,
+    public record Save(String job,
                        String subject,
                        String body) {
 
